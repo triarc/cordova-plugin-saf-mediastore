@@ -123,11 +123,12 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 
 	public boolean openFile(JSONArray args,CallbackContext callbackContext){
 		try{
-			String uri=args.getString(0);
+			String uriString=args.getString(0);
+			Uri uri=Uri.parse(uriString);
 			Intent intent=new Intent(Intent.ACTION_VIEW);
 			String mimeType=cordovaInterface.getContext().getContentResolver().getType(uri);
 			if(mimeType==null)mimeType="*/*";
-			intent.setDataAndType(Uri.parse(uri),mimeType);
+			intent.setDataAndType(uri,mimeType);
 			this.callbackContext=callbackContext;
 			cordovaInterface.startActivityForResult(this,intent,Action.openFile.ordinal());
 			return true;
