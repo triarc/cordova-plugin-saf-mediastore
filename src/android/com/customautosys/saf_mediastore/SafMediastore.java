@@ -125,7 +125,9 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 		try{
 			String uri=args.getString(0);
 			Intent intent=new Intent(Intent.ACTION_VIEW);
-			intent.setDataAndType(Uri.parse(uri),MimeTypeMap.getSingleton().getMimeTypeFromExtension(uri.substring(uri.lastIndexOf('.')+1)));
+			String mimeType=MimeTypeMap.getSingleton().getMimeTypeFromExtension(uri.substring(uri.lastIndexOf('.')+1));
+			if(mimeType==null)mimeType="*/*";
+			intent.setDataAndType(Uri.parse(uri),mimeType);
 			this.callbackContext=callbackContext;
 			cordovaInterface.startActivityForResult(this,intent,Action.openFile.ordinal());
 			return true;
@@ -155,6 +157,7 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 			JSONObject params=args.getJSONObject(0);
 			String filename=params.getString("filename");
 			String mimeType=MimeTypeMap.getSingleton().getMimeTypeFromExtension(filename.substring(filename.lastIndexOf('.')+1));
+			if(mimeType==null)mimeType="*/*";
 			String folder=null;
 			try{
 				if(!params.isNull("folder"))folder=params.getString("folder");
@@ -245,7 +248,9 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 				debugLog(e);
 			}
 			if(filename!=null){
-				intent.setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(filename.substring(filename.lastIndexOf('.')+1)));
+				String mimeType=MimeTypeMap.getSingleton().getMimeTypeFromExtension(filename.substring(filename.lastIndexOf('.')+1));
+				if(mimeType==null)mimeType="*/*";
+				intent.setType(mimeType);
 				intent.putExtra(Intent.EXTRA_TITLE,filename);
 			}
 			String folder=null;
