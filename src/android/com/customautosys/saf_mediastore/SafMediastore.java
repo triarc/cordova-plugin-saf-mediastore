@@ -210,7 +210,7 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 				contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH,Environment.DIRECTORY_DOWNLOADS+subFolder);
 				uri=contentResolver.insert(MediaStore.Files.getContentUri("external"),contentValues);
 			}
-			try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(uri)){
+			try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(uri,"wt")){
 				outputStream.write(Base64.decode(params.getString("data"),Base64.DEFAULT));
 			}
 			callbackContext.success(uri.toString());
@@ -225,7 +225,7 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 		try{
 			JSONObject params=args.getJSONObject(0);
 			Uri uri=Uri.parse(params.getString("uri"));
-			try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(uri)){
+			try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(uri,"wt")){
 				outputStream.write(Base64.decode(params.getString("data"),Base64.DEFAULT));
 			}
 			callbackContext.success(uri.toString());
@@ -386,7 +386,7 @@ public class SafMediastore extends CordovaPlugin implements ValueCallback<String
 					callbackContext.error(debugLog("No saveFileData in onActivityResult"));
 					break;
 				}
-				try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(intent.getData())){
+				try(OutputStream outputStream=cordovaInterface.getContext().getContentResolver().openOutputStream(intent.getData(),"wt")){
 					outputStream.write(Base64.decode(data,Base64.DEFAULT));
 					callbackContext.success(intent.getDataString());
 				}catch(Exception e){
